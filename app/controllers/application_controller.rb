@@ -7,4 +7,15 @@ class ApplicationController < Sinatra::Base
     set :views, 'app/views'
   end
 
+  get '/' do
+    erb :'index'
+  end
+
+  get '/signup' do
+    erb :'signup'
+  end
+
+  get '/login' do
+    erb :'login'
+  end
 end
