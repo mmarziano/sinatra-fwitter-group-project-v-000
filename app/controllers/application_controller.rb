@@ -3,6 +3,8 @@ require './config/environment'
 class ApplicationController < Sinatra::Base
 
   configure do
+    enable :sessions
+    set :session_secret, "secret"
     set :public_folder, 'public'
     set :views, 'app/views'
   end
@@ -12,15 +14,44 @@ class ApplicationController < Sinatra::Base
   end
 
   get '/signup' do
-    erb :'signup'
+    erb :'/users/signup'
   end
 
   post '/signup' do
+    #binding.pry
+    if User.find_by(username: params[:username])
+      raise "Username already exists. Try again."
+    else
+      @user = User.create(params)
+      session[:user_id] = @user.id
+    end
     @tweets = Tweet.all
-    erb :'tweets/index'
+    #binding.pry
+    erb :"/tweets/index"
   end
 
   get '/login' do
-    erb :'login'
+    erb :'/users/login'
   end
+
+  post '/login' do
+    @user = User.find_by(username: params[:username])
+    session[:user_id] = @user.id
+    binding.pry
+    
+  end
+
+  get '/logout' do
+    session.clear
+
+    erb :'/login'
+  end
+
+helpers do
+  def logged_in?
+    !session[:user_id].nil?
+  end
+
+end
+
 end
