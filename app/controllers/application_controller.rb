@@ -14,6 +14,10 @@ class ApplicationController < Sinatra::Base
   end
 
   get '/signup' do
+    if logged_in?
+      redirect to '/tweets'
+    end
+    
     erb :'/users/signup'
   end
 
@@ -49,7 +53,11 @@ class ApplicationController < Sinatra::Base
 
 helpers do
   def logged_in?
-    !session[:user_id].nil?
+    !!session[:user_id]
+  end
+
+  def current_user
+    User.find(session[:user_id])
   end
 
 end
