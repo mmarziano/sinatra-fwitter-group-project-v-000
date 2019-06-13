@@ -15,23 +15,25 @@ class ApplicationController < Sinatra::Base
 
   get '/signup' do
     if logged_in?
-      redirect to '/tweets'
+      redirect to "/tweets/index"
     end
-    
-    erb :'/users/signup'
+      erb :'/users/signup'
   end
 
   post '/signup' do
     #binding.pry
     if User.find_by(username: params[:username])
       raise "Username already exists. Try again."
-    else
+    elsif
+      valid_login?
       @user = User.create(params)
       session[:user_id] = @user.id
+    else
+      redirect to '/users/signup'
     end
     @tweets = Tweet.all
     #binding.pry
-    erb :"/tweets/index"
+    redirect to '/tweets/index'
   end
 
   get '/login' do
@@ -41,6 +43,7 @@ class ApplicationController < Sinatra::Base
   post '/login' do
     @user = User.find_by(username: params[:username])
     session[:user_id] = @user.id
+    @tweets = Tweet.all
     #binding.pry
     erb :'/tweets/index'
   end
@@ -48,7 +51,7 @@ class ApplicationController < Sinatra::Base
   get '/logout' do
     session.clear
 
-    erb :'/login'
+    erb :'/users/login'
   end
 
 helpers do
@@ -58,6 +61,10 @@ helpers do
 
   def current_user
     User.find(session[:user_id])
+  end
+
+  def valid_login?
+    params[:username].present? && params[:password].present? && params[:email].present?
   end
 
 end
