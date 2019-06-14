@@ -28,7 +28,11 @@ class UsersController < ApplicationController
   end
 
   get '/login' do
-    erb :'/users/login'
+    if logged_in?
+      redirect to '/tweets'
+    else
+      erb :'/users/login'
+    end
   end
 
   post '/login' do
@@ -36,17 +40,23 @@ class UsersController < ApplicationController
       @user = User.find_by(username: params[:username])
       session[:user_id] = @user.id
       @tweets = Tweet.all
-
     else
       redirect to '/login'
     end
     #binding.pry
-    erb :'/tweets/index'
+    redirect to '/tweets'
+  end
+
+  get '/show' do
+    @user = current_user
+    @user_tweets = Tweet.find_by(user_id: current_user.id)
+    binding.pry
   end
 
   get '/logout' do
-    session.clear
+      session.clear
 
-    erb :'/users/login'
+      redirect to '/login'
   end
+
 end
