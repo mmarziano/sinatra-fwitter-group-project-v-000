@@ -49,6 +49,7 @@ class UsersController < ApplicationController
 
   get '/users/:slug' do
     @user = User.find_by_slug(params[:slug])
+    @user_tweets = []
     if current_user == @user
       Tweet.all.each do |t|
         if t.user_id == current_user.id
