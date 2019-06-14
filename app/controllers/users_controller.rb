@@ -47,7 +47,7 @@ class UsersController < ApplicationController
     redirect to '/tweets'
   end
 
-  get '/show' do
+  get '/user/:id' do
     @user = current_user
     @user_tweets = Tweet.find_by(user_id: current_user.id)
     binding.pry
