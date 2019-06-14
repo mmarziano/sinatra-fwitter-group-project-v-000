@@ -47,10 +47,11 @@ class UsersController < ApplicationController
     redirect to '/tweets'
   end
 
-  get '/user/:id' do
+  get '/user/:slug' do
     @user = current_user
     @user_tweets = Tweet.find_by(user_id: current_user.id)
-    binding.pry
+
+    erb :'/users/show'
   end
 
   get '/logout' do
