@@ -47,10 +47,18 @@ class UsersController < ApplicationController
     redirect to '/tweets'
   end
 
-  get '/user/:slug' do
-    @user = current_user
-    @user_tweets = Tweet.find_by(user_id: current_user.id)
-
+  get '/users/:slug' do
+    @user = User.find_by_slug(params[:slug])
+    if current_user == @user
+      Tweet.all.each do |t|
+        if t.user_id == current_user.id
+          @user_tweets << t
+        end
+      end
+    else
+      redirect to '/login'
+    end
+    
     erb :'/users/show'
   end
 
