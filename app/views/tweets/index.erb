@@ -3,7 +3,11 @@
 <h3>Tweets</h3>
 
 <% @tweets.each do |tweet| %>
-  <p><a href="/tweets/<%=tweet.id%>"><%=tweet.content%></a></p>
+  <%if tweet.user_id == @user.id%>
+    <p><a href="/tweets/<%=tweet.id%>"><%=tweet.content%></a></p>
+  <%else%>
+    <p><%=tweet.content%></a></p>
+<% end %>
 <% end %>
 
 <a class="button" href="/tweets/new">Create New Tweet</a>
