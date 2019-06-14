@@ -23,7 +23,7 @@ helpers do
   end
 
   def params_present?
-    params[:username].present? && params[:password].present? && params[:email].present?
+    params[:username].present? && params[:password].present? && params[:email].present? || params[:content].present?
   end
 
   def valid_login?
